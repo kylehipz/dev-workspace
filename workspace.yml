@@ -1,0 +1,19 @@
+- name: Kyle Dev Workspace Setup
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Ensure SSH exists
+      ansible.builtin.git:
+        repo: 'https://github.com/kylehipz/ssh-key'
+        dest: /home/kylehipz/ssh-key
+        version: main
+
+    - name: Copy and decrypt SSH private key
+      ansible.builtin.copy:
+        src: /home/kylehipz/ssh-key/id_ed25519
+        dest: /home/kylehipz/.ssh/id_ed25519
+
+    - name: Copy and decrypt SSH public key
+      ansible.builtin.copy:
+        src: /home/kylehipz/ssh-key/id_ed25519.pub
+        dest: /home/kylehipz/.ssh/id_ed25519.pub
