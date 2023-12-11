@@ -12,8 +12,51 @@
       ansible.builtin.copy:
         src: /home/kylehipz/ssh-key/id_ed25519
         dest: /home/kylehipz/.ssh/id_ed25519
+        mode: '0600'
 
     - name: Copy and decrypt SSH public key
       ansible.builtin.copy:
         src: /home/kylehipz/ssh-key/id_ed25519.pub
         dest: /home/kylehipz/.ssh/id_ed25519.pub
+        mode: '0600'
+
+    - name: Fix permissions (SSH)
+      file:
+        path: /home/kylehipz/.ssh
+        state: directory
+        recurse: yes
+        owner: kylehipz
+        group: kylehipz
+        follow: no
+
+    - name: Fix permissions (SSH)
+      file:
+        path: /home/kylehipz/ssh-key
+        state: directory
+        recurse: yes
+        owner: kylehipz
+        group: kylehipz
+        follow: no
+
+    - name: Start SSH
+      ansible.builtin.shell: |
+        eval "$(ssh-agent)"
+        ssh-add /home/kylehipz/.ssh/id_ed25519
+
+    - name: Clone Dots
+      ansible.builtin.git:
+        repo: 'git@github.com:kylehipz/dots.git'
+        dest: /home/kylehipz/dots
+        version: main
+        accept_hostkey: yes
+        clone: yes
+        key_file: /home/kylehipz/.ssh/id_ed25519
+
+    - name: Fix permissions (Dots)
+      file:
+        path: /home/kylehipz/dots
+        state: directory
+        recurse: yes
+        owner: kylehipz
+        group: kylehipz
+        follow: no
