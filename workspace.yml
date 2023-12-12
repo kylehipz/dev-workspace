@@ -60,3 +60,44 @@
         owner: kylehipz
         group: kylehipz
         follow: no
+
+    - name: Install Tmux Plugin Manager
+      ansible.builtin.git:
+        clone: yes
+        repo: 'https://github.com/tmux-plugins/tpm'
+        dest: /home/kylehipz/.tmux/plugins/tpm
+
+    - name: Install Neovim Packer
+      ansible.builtin.git:
+        clone: yes
+        repo: 'https://github.com/wbthomason/packer.nvim'
+        dest: /home/kylehipz/.local/share/nvim/site/pack/packer/start/packer.nvim
+        depth: 1
+
+    - name: Fix permissions (Packer)
+      file:
+        path: /home/kylehipz/.local/share/nvim
+        state: directory
+        recurse: yes
+        owner: kylehipz
+        group: kylehipz
+        follow: no
+    
+    - name: Setup Configuration Symlinks
+      ansible.builtin.shell: |
+        rm /home/kylehipz/.zshrc
+        ln -s /home/kylehipz/dots/nvim.chad /home/kylehipz/.config/nvim
+        ln -s /home/kylehipz/dots/tmux/.tmux.conf /home/kylehipz
+        ln -s /home/kylehipz/dots/zsh/.zshrc /home/kylehipz
+
+    - name: Install Oh My Zsh Syntax Highlighting
+      ansible.builtin.git:
+        clone: yes
+        repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+        dest: /home/kylehipz/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+    - name: Install Oh My Zsh Syntax Autosuggestions
+      ansible.builtin.git:
+        clone: yes
+        repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+        dest: /home/kylehipz/.oh-my-zsh/custom/plugins/zsh-autosuggestions
